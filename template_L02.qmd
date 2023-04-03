@@ -1,0 +1,99 @@
+---
+title: "L02 More Models"
+subtitle: "Data Science 3 with R (STAT 301-3)"
+author: "YOUR NAME"
+
+format:
+  html:
+    toc: true
+    embed-resources: true
+    code-fold: show
+    link-external-newwindow: true
+    
+execute:
+  warning: false
+
+from: markdown+emoji  
+---
+
+## Github Repo Link
+
+::: {.callout-important}
+
+To link to your github **repo**sitory, appropriately edit the example link below. Meaning replace `https://your-github-repo-url` with your github repo url. Suggest verifying the link works before submitting.
+
+[https://your-github-repo-url](https://your-github-repo-url)
+
+:::
+
+## Overview
+
+The main goals of this lab are (1) review and practice the application of machine learning within the `tidymodels` framework and (2) introduce and explore a few new model types.
+
+## Dataset
+
+We will be utilizing `wildfires.csv` dataset contained in the **data** subdirectory. `wildfires_codebook.html` provides a quick overview of the data which is where students should begin.
+
+## Instructions
+
+A wildlife protection area is located in the park from which this data was collected and we want to predict whether or not a wildfire will reach it (`wlf`) given all the other variables in our dataset except for `burned` (we will be using it as a target variable in the future).
+
+Using the `tidymodels` framework, pick the best model from the following candidate models:
+
+1.  elastic net
+
+    -   tune `mixture` and `penalty`
+    -   include all two-way interactions
+
+2.  Nearest neighbors
+
+    -   tune number of `neighbors`
+
+3.  Random forest
+
+    -   tune `mtry` and `min_n`
+
+4.  Boosted tree
+
+    -   tune `mtry`, `min_n`, and `learn_rate`
+
+5.  Support vector machine (polynomial)
+
+    -   tune `cost`, `degree`, and `scale_factor` (default values are sufficient, free to change if you want)
+
+6.  Support vector machine (radial basis function)
+
+    -   tune `cost` and `rbf_sigma` (default values a sufficient, free to change if you want)
+
+7.  Single Layer Neural Network (multilayer perceptron --- mlp)
+
+    -   tune `hidden_units` and `penalty` (default values a sufficient, free to change if you want)
+    -   `nnet` for the engine will be easiest, Alternatively, you might want to try `keras` if you can get it installed ([Keras Installation](https://tensorflow.rstudio.com/guide/keras/)).
+    
+8. Multivariate adaptive regression splines (MARS)
+
+    - tune `num_terms` (need to supply upperbound) and `prod_degree` (defualt works here)
+
+Some general notes:
+
+- For tuning we suggest using 5 folds and 3 repeats. 
+- Make sure you specify which performance measure you are using to pick the best model.
+- Almost all work should be done in R scripts and you will only be reporting the results (we will see the R scripts in your repo).
+- Suggest using jobs.
+- A basic layout is suggested/provided. 
+- We also want to collect how long it takes the tuning process for each model type. We can use the `tictoc` package --- code is provided in the `template_tune.R`.
+
+## What should be turned in
+
+A short write-up that includes:
+
+1. A nicely formatted table that lists the 8 general types of model and the best performance it achieved. 
+
+2. A nicely formatted table that lists the run time for the tuning process for the 8 model types (could be combined with first table).
+
+3. Final selection, training, and evaluation of the best model. 
+
+## Github Repo Link
+
+[YOUR GITHUB URL](YOUR GITHUB URL){target="_blank"}
+
