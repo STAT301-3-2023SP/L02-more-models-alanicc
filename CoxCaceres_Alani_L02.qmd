@@ -12,17 +12,14 @@ format:
     
 execute:
   warning: false
+  echo: false
 
 from: markdown+emoji  
 ---
 
 ## Github Repo Link
 
-::: {.callout-important}
-
-To link to your github **repo**sitory, appropriately edit the example link below. Meaning replace `https://your-github-repo-url` with your github repo url. Suggest verifying the link works before submitting.
-
-[https://github.com/alanicc/alani-STAT301-3.git](https://github.com/alanicc/alani-STAT301-3.git)
+[https://github.com/STAT301-3-2023SP/L01-review-alanicc](https://github.com/STAT301-3-2023SP/L01-review-alanicc)
 
 :::
 
@@ -89,6 +86,8 @@ A short write-up that includes:
 
 1. A nicely formatted table that lists the 8 general types of model and the best performance it achieved. 
 
+
+
 2. A nicely formatted table that lists the run time for the tuning process for the 8 model types (could be combined with first table).
 
 3. Final selection, training, and evaluation of the best model. 
@@ -96,4 +95,44 @@ A short write-up that includes:
 ## Github Repo Link
 
 [YOUR GITHUB URL](YOUR GITHUB URL){target="_blank"}
+
+
+
+
+## Executive Summary
+
+what is the goal of your report ?
+
+
+predicting: wlf (will the fire reach the wildlife protection zone) using 8 dif models (could explain dif models)
+
+describe:
+
+500 dif wildfires, large national park, used all variables--14(maybe list significant ones)
+
+
+what's the goal, where's the data from, what does it contain?
+
+
+briefly describe process--cross-validation, training/testing, evaluation method
+
+the resulting model performance are shown in the table/graph below
+
+```{r}
+# packages
+library(kableExtra)
+
+#table/graph here
+load("results/result_table.rda")
+kableExtra::kable(result_table) %>% 
+  kableExtra::kable_minimal()
+
+```
+
+explain best overall model and tuning parameters
+show final results on testing data--roc_auc and confusion matrix
+
+conclusions--anything else important today, any next steps
+
+
 

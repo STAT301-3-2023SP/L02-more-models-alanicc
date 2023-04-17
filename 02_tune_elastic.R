@@ -5,15 +5,15 @@ library(tidyverse)
 library(tidymodels)
 library(tictoc)
 
+
 # handle common conflicts
 tidymodels_prefer()
 
 # set up parallel processing
-parallel::detectCores()
-cl <- makePSOCKcluster(12)
-registerDoParallel(cl)
+library(doMC)
 
-stopCluster(cl)
+parallel::detectCores()
+registerDoMC(cores = 12)
 
 # load required objects ----
 load("results/tuning_setup.rda")
@@ -33,25 +33,17 @@ en_params <- extract_parameter_set_dials(en_mod)
 en_grid <- grid_regular(en_params, levels = 5)
 
 #update recipe
-wildfire_interact <-wildfire_rec %>% 
+wildfire_interact <- wildfire_rec %>%
   step_interact(~all_numeric_predictors()^2)
 
 wildfire_interact %>%
   prep(wildfire_train) %>%
-  bake(new_data = NULL) %>% 
-  view()
+  bake(new_data = NULL)
 
-stopCluster(cl)
-
-# # define tuning grid
-# en_tune <- wildfire_wf %>%
-#   tune_grid(resamples = wildfire_folds, 
-#             grid = en_grid, 
-#             metrics = metric_set(mae, rmse))
 
 # workflow ----
-wildfire_wf <- workflow() %>% 
-  add_recipe(wildfire_rec) %>% 
+en_workflow <- workflow() %>% 
+  add_recipe(wildfire_interact) %>% 
   add_model(en_mod)
 
 # Tuning/fitting ----
@@ -60,7 +52,7 @@ tic("elastic net")
 
 
 en_tune <- tune_grid(
-  wildfire_wwf,
+  en_workflow,
   resamples = wildfire_folds,
   grid = en_grid,
   control = control_grid(save_pred = TRUE,
@@ -74,7 +66,7 @@ time_log <- tic.log(format = FALSE)
 en_tictoc <- tibble(model = time_log[[1]]$msg,
                     runtime = time_log[[1]]$toc - time_log[[1]]$tic)
 
-stopCluster(cl)
 
 save(en_tune, en_tictoc,
      file = "results/tuning_en.rda")
+
