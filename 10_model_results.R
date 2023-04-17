@@ -35,10 +35,12 @@ null_results <- null_fit %>%
 
 # individual model results 
 # this is something I recommend putting in the appendix
-autoplot(en_tune, metric = "roc_auc")
+autoplot(mars_tune, metric = "roc_auc")
 
-en_tune %>% 
+mars_metric <- mars_tune %>% 
   show_best(metric = "roc_auc")
+
+save(mars_metric, file = "results/mars_metric.rda")
 
 ####################################
 # put all tuned grids together
@@ -65,6 +67,7 @@ model_set %>%
   ylim(c(0.7, 0.9)) +
   theme(legend.position = "none")
 # will want this in the report ! either save image or will need to include this code
+
 
 # table of our results
 model_results <- model_set %>% 

@@ -1,5 +1,5 @@
 ---
-title: "L02 More Models"
+title: "Executive Summary: L02 More Models"
 subtitle: "Data Science 3 with R (STAT 301-3)"
 author: "Alani Cox-Caceres"
 
@@ -19,104 +19,26 @@ from: markdown+emoji
 
 ## Github Repo Link
 
-[https://github.com/STAT301-3-2023SP/L01-review-alanicc](https://github.com/STAT301-3-2023SP/L01-review-alanicc)
+[https://github.com/STAT301-3-2023SP/L02-more-models-alanicc](https://github.com/STAT301-3-2023SP/L02-more-models-alanicc)
 
-:::
 
-## Overview
+## Goal
 
-The main goals of this lab are (1) review and practice the application of machine learning within the `tidymodels` framework and (2) introduce and explore a few new model types.
+The goal of this lab is to predict whether or not a wildfire will reach the wildlife protection zone of a national park. 
 
 ## Dataset
 
-We will be utilizing `wildfires.csv` dataset contained in the **data** subdirectory. `wildfires_codebook.html` provides a quick overview of the data which is where students should begin.
+This summary utilizes the `wildfires.csv` dataset contained in the **data** subdirectory. this data comes from a population of 500 wildfires within that park. The dataset has 16 variables in total, but I only observed 14 with the target variable being wlf (variable determining whether or not the fire reached the protection zone). 
 
-## Instructions
+## Models
 
-A wildlife protection area is located in the park from which this data was collected and we want to predict whether or not a wildfire will reach it (`wlf`) given all the other variables in our dataset except for `burned` (we will be using it as a target variable in the future).
+To analyze this data, I used 8 different models: k-nearest, random forest, boosted tree, elastic net with two-way interactions, radial support vector machine, polynomial support vector machine, single layer neural network, and a multivariate adaptive regression spline model. 
 
-Using the `tidymodels` framework, pick the best model from the following candidate models:
+I split the data into a 20/80 split with the training data being the majority, and stratified the `wlf` variable to maintain balance. I used a v-fold cross-validation with 5 folds and repeated them 3 times. In this v-fold cross-validation, the data was split into 5 folds and the procedure was repeated 3 times. Ultimately, this model evaluation method reports the mean result across all folds from all runs. The metric I used to test accuracy was roc_auc, and I performed a confusion matrix on the best final model. A roc_auc score determines how efficient the model is, and a confusion matrix is a table that displays the numerous outcomes of the predictions and results from the dataset. 
 
-1.  elastic net
+## Model Performance
 
-    -   tune `mixture` and `penalty`
-    -   include all two-way interactions
-
-2.  Nearest neighbors
-
-    -   tune number of `neighbors`
-
-3.  Random forest
-
-    -   tune `mtry` and `min_n`
-
-4.  Boosted tree
-
-    -   tune `mtry`, `min_n`, and `learn_rate`
-
-5.  Support vector machine (polynomial)
-
-    -   tune `cost`, `degree`, and `scale_factor` (default values are sufficient, free to change if you want)
-
-6.  Support vector machine (radial basis function)
-
-    -   tune `cost` and `rbf_sigma` (default values a sufficient, free to change if you want)
-
-7.  Single Layer Neural Network (multilayer perceptron --- mlp)
-
-    -   tune `hidden_units` and `penalty` (default values a sufficient, free to change if you want)
-    -   `nnet` for the engine will be easiest, Alternatively, you might want to try `keras` if you can get it installed ([Keras Installation](https://tensorflow.rstudio.com/guide/keras/)).
-    
-8. Multivariate adaptive regression splines (MARS)
-
-    - tune `num_terms` (need to supply upperbound) and `prod_degree` (defualt works here)
-
-Some general notes:
-
-- For tuning we suggest using 5 folds and 3 repeats. 
-- Make sure you specify which performance measure you are using to pick the best model.
-- Almost all work should be done in R scripts and you will only be reporting the results (we will see the R scripts in your repo).
-- Suggest using jobs.
-- A basic layout is suggested/provided. 
-- We also want to collect how long it takes the tuning process for each model type. We can use the `tictoc` package --- code is provided in the `template_tune.R`.
-
-## What should be turned in
-
-A short write-up that includes:
-
-1. A nicely formatted table that lists the 8 general types of model and the best performance it achieved. 
-
-
-
-2. A nicely formatted table that lists the run time for the tuning process for the 8 model types (could be combined with first table).
-
-3. Final selection, training, and evaluation of the best model. 
-
-## Github Repo Link
-
-[YOUR GITHUB URL](YOUR GITHUB URL){target="_blank"}
-
-
-
-
-## Executive Summary
-
-what is the goal of your report ?
-
-
-predicting: wlf (will the fire reach the wildlife protection zone) using 8 dif models (could explain dif models)
-
-describe:
-
-500 dif wildfires, large national park, used all variables--14(maybe list significant ones)
-
-
-what's the goal, where's the data from, what does it contain?
-
-
-briefly describe process--cross-validation, training/testing, evaluation method
-
-the resulting model performance are shown in the table/graph below
+The best performance metric and runtimes for each model are shown below:
 
 ```{r}
 # packages
@@ -129,10 +51,47 @@ kableExtra::kable(result_table) %>%
 
 ```
 
-explain best overall model and tuning parameters
-show final results on testing data--roc_auc and confusion matrix
+Here are the same results displayed as a graph:
 
-conclusions--anything else important today, any next steps
+```{r}
+# packages
+library(tidyverse)
+library(tidymodels)
+library(knitr)
+
+#table/graph here
+knitr::include_graphics("data/model_set_plot.png")
+
+```
+
+These results reveal that the multivariate adaptive regression spline model (mars) performed the best in its predictions. The roc_auc score for this model was 0.89, and the runtime was 16.371, which makes it the most accurate and second-fastest model I ran. 
+
+```{r}
+#table/graph here
+load("results/mars_metric.rda")
+kableExtra::kable(mars_metric) %>% 
+  kableExtra::kable_minimal()
+```
+
+This table displays the best metrics that were found for the mars model. 
+
+```{r}
+#table/graph here
+knitr::include_graphics("data/mars_roc_auc.png")
+```
+
+This graph visualizes the roc_auc curve for the mars model. Overall, it seems the model performed relatively well. 
 
 
+Finally, I used this model to create a confusion matrix of the resulting predictions:
 
+```{r}
+#table/graph here
+knitr::include_graphics("data/conf_mat.png")
+```
+
+Although these are not the best results, I am still happy with how the model performed and it was able to create relatively accurate predictions within a short period of time. In the future, I'd like to spend more time testing different metrics to determine ways to improve the final predictions. Overall, I found that the mars model was effective in predicting the effects of wildfires in national parks, and I am content with my data exploration.
+
+## Github Repo Link
+
+[https://github.com/STAT301-3-2023SP/L02-more-models-alanicc](https://github.com/STAT301-3-2023SP/L02-more-models-alanicc)
