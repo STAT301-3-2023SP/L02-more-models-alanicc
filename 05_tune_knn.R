@@ -1,4 +1,4 @@
-# {random forest] tuning ----
+# {knn] tuning ----
 
 # Load package(s) ----
 library(tidyverse)
